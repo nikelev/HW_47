@@ -1,20 +1,33 @@
 package ait.supermarket;
 
+import java.time.LocalDate;
+
 import ait.supermarket.dao.Supermarket;
 import ait.supermarket.dao.SupermarketImpl;
 import ait.supermarket.model.Product;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class SupermarketAppl {
-    public static void main(String[] args) {
-        Collection<Product> supermarket=new ArrayList<Product>();
-        supermarket.add(new Product(111,"name1", "category1", "brand1", 1.1, LocalDate.now().plusYears(1)));
-        supermarket.add(new Product(222,"name2", "category1", "brand2", 1.2, LocalDate.now().plusYears(1)));
-        supermarket.add(new Product(333,"name3", "category2", "brand3", 1.3, LocalDate.now().plusYears(1)));
 
-        supermarket.forEach(s-> System.out.println(s));
+    public static void main(String[] args) {
+        LocalDate now = LocalDate.now();
+        Supermarket myMarket = new SupermarketImpl();
+        myMarket.addProduct(new Product(111111, "White Bread", "Bread", "Kolosok", 6.5, now.plusDays(5)));
+        myMarket.addProduct(new Product(222222, "ChokoMilk", "Dairy", "MilkLand", 13, now.minusDays(3)));
+        myMarket.addProduct(new Product(333333, "Cheese Gauda", "Dairy", "Farmer", 22.5, now.plusDays(50)));
+        myMarket.addProduct(new Product(444444, "Cheese Chedder", "Dairy", "MilkLand", 30, now.plusDays(85)));
+        myMarket.addProduct(new Product(555555, "Sweet Buns", "Bread", "Kolosok", 18.3, now.minusDays(25)));
+
+        for (Product product : myMarket) {
+            System.out.println(product);
+        }
+        System.out.println();
+
+        System.out.println("Products with expired date:");
+        Iterable<Product> res = myMarket.findProductWithExpDate();
+        for (Product product : res) {
+            System.out.println(product);
+        }
+        System.out.println();
     }
+
 }

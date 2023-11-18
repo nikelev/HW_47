@@ -2,7 +2,7 @@ package ait.supermarket.dao;
 
 import ait.supermarket.model.Product;
 
-public interface Supermarket extends Iterable<Product>{
+public interface Supermarket extends Iterable<Product> {
     boolean addProduct(Product product);
 
     Product removeProduct(long barCode);
@@ -13,7 +13,7 @@ public interface Supermarket extends Iterable<Product>{
 
     Iterable<Product> findByBrand(String brand);
 
-    Iterable<Product> findProductsWithExpiredDate(String brand);
+    Iterable<Product> findProductWithExpDate();
 
     int skuQuantity();
 }

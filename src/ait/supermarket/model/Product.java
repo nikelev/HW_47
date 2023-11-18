@@ -1,5 +1,4 @@
 package ait.supermarket.model;
-
 import java.time.LocalDate;
 
 public class Product {
@@ -17,6 +16,10 @@ public class Product {
         this.brand = brand;
         this.price = price;
         this.expDate = expDate;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public long getBarCode() {
@@ -43,10 +46,6 @@ public class Product {
         return expDate;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     @Override
     public String toString() {
         return "Product{" +
@@ -60,11 +59,11 @@ public class Product {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
 
-        Product product = (Product) o;
+        Product product = (Product) object;
 
         return barCode == product.barCode;
     }

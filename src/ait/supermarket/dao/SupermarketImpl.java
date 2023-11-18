@@ -1,46 +1,41 @@
 package ait.supermarket.dao;
 
-import ait.supermarket.model.Product;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.function.Predicate;
+import ait.supermarket.model.Product;
+
 
 public class SupermarketImpl implements Supermarket {
-    private Collection<Product> products;
+    private Collection<Product> products = new ArrayList<>();
 
-    public SupermarketImpl(Collection<Product> products) {
-
-        for (Product p : products) {
-            addProduct(p);
-        }
+    @Override
+    public Iterator<Product> iterator() {
+        return products.iterator();
     }
 
     @Override
     public boolean addProduct(Product product) {
-        if (product == null) {
-            throw new RuntimeException("null");
-        }
-        if (findByBarCode(product.getBarCode()) != null) {
+        if (product == null || products.contains(product)) {
             return false;
         }
-
         return products.add(product);
     }
 
     @Override
     public Product removeProduct(long barCode) {
-        Product product = findByBarCode(barCode);
-        products.remove(product);
-
-        return product;
+        Product removed = findByBarCode(barCode);
+        products.remove(removed);
+        return removed;
     }
 
     @Override
     public Product findByBarCode(long barCode) {
         for (Product product : products) {
-            if (product.getBarCode() == barCode) {
+            if (barCode == product.getBarCode()) {
                 return product;
             }
         }
@@ -49,46 +44,32 @@ public class SupermarketImpl implements Supermarket {
 
     @Override
     public Iterable<Product> findByCategory(String category) {
-        Collection<Product> res = new ArrayList<Product>();
-        for (Product p : products) {
-            if (p.getCategory().equals(category)) {
-                res.add(p);
-                return res;
-            }
-
-        }
-
-        return null;
+        return findByPredicate(p -> category.equalsIgnoreCase(p.getCategory()));
     }
 
     @Override
     public Iterable<Product> findByBrand(String brand) {
-        Collection<Product> res = new ArrayList<Product>();
-        for (Product p : products) {
-            if (p.getBrand().equals(brand)) {
-                res.add(p);
-                return res;
-            }
-
-        }
-
-        return null;
+        return findByPredicate(p -> brand.equalsIgnoreCase(p.getBrand()));
     }
 
     @Override
-    public Iterable<Product> findProductsWithExpiredDate(String brand) {
-        Collection<Product> res = new ArrayList<Product>();
+    public Iterable<Product> findProductWithExpDate() {
+        LocalDate current = LocalDate.now();
+        return findByPredicate(p -> current.isAfter(p.getExpDate()));
+    }
 
-        return null;
+    public Iterable<Product> findByPredicate(Predicate<Product> predicate) {
+        List<Product> res = new ArrayList<>();
+        for (Product product : products) {
+            if (predicate.test(product)) {
+                res.add(product);
+            }
+        }
+        return res;
     }
 
     @Override
     public int skuQuantity() {
         return products.size();
-    }
-
-    @Override
-    public Iterator<Product> iterator() {
-        return products.iterator();
     }
 }
